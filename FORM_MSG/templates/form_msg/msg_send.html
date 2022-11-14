@@ -1,0 +1,127 @@
+{% extends 'form_msg/base_msg.html' %}
+
+{#MAY INCLUDE STATIC, CSS!!! FROM MAIN PAGE#}
+{% load static %}
+{% load custom_tags %}
+
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-8 p-5">
+{#            <h1 class="p-1">Please complete the form</h1>#}
+
+            {#            {% if error %}#}
+            {#                <p>ERR: {{ error }}</p>#}
+            {#            {% endif %}#}
+
+            <div class="card">
+                <div class="card-header">{{ title }}</div>
+                <div class="card-body">
+
+                    {#                    {% for error in form.errors %}#}
+                    {#                        <div class="alert alert-danger" role="alert">#}
+                    {#                            <span>❗ {{ error|capfirst }}</span>#}
+                    {#                        </div>#}
+                    {#                    {% endfor %}#}
+
+                    {% if form.errors %}
+                        <div class="alert alert-danger" role="alert">
+                            <span style="display: flex">
+                                ❗ {{ form.errors }}
+                            </span>
+                        </div>
+                    {% endif %}
+
+                    <form method="post" enctype="multipart/form-data">
+                        {#                        CSRF#}
+                        {% csrf_token %}
+
+                        {% for field in form %}
+                            <div class="form-group row"
+                                 aria-required={% if field.field.required %}"true"{% else %}"false"{% endif %}
+                            </div>
+
+                            <label for="{{ field.id_for_label }}" class="col-md-3 col-form-label text-md-right">
+                                {{ field.label }}
+                                {% if field.field.required %}<span class="required">*</span>{% endif %}
+
+                                {% if field.help_text %}
+                                    <small id="{{ field.id_for_label }}-help"
+                                           class="form-text text-muted">{{ field.help_text|safe }}</small>
+                                {% endif %}
+
+                            </label>
+
+                            {# input, width9 #}
+                            <div class="col-md-9">
+                                {# input tag #}
+                                {{ field|addclass:"form-control" }}
+                            </div>
+
+                            </div>
+                        {% endfor %}
+
+            <div class="row justify-content-center"> {# col-md-6 offset-md-4 #}
+                <button type="submit" class="btn btn-primary">
+                    {{ btn_caption }}
+                </button>
+            </div>
+            </form>
+
+        </div> <!-- card body -->
+    </div> <!-- card -->
+
+    {#    list of msgs#}
+    {% if data %}
+        <div class="table-responsive mt-4">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Author</th>
+                    <th scope="col">Id</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Text</th>
+                    <th scope="col">Date</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for item in data %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ item.author }}</td>
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.text }}</td>
+                        <td>{{ item.created_date }}</td>
+
+                        <td><a href="{% url 'form_msg:edit_msg' item.id %}">
+                            {#                            edit#}
+                            <svg id="i-edit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32"
+                                 height="32" fill="none" stroke="currentcolor" stroke-linecap="round"
+                                 stroke-linejoin="round" stroke-width="2">
+                                <path d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z"/>
+                            </svg>
+                        </a></td>
+                        <td><a href="{% url 'form_msg:delete_msg' item.id %}">
+                            {#                            delete#}
+                            <svg id="i-trash" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32"
+                                 height="32" fill="none" stroke="currentcolor" stroke-linecap="round"
+                                 stroke-linejoin="round" stroke-width="2">
+                                <path d="M28 6 L6 6 8 30 24 30 26 6 4 6 M16 12 L16 24 M21 12 L20 24 M11 12 L12 24 M12 6 L13 2 19 2 20 6"/>
+                            </svg>
+                        </a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+    {% endif %}
+
+    {#    </div> <!-- col -->#}
+    {#    </div> <!-- row -->#}
+{% endblock %}

@@ -1,0 +1,31 @@
+{#{% with request.resolver_match.view_name as view_name %} #}
+
+<div class="card mb-4 shadow justify-content-center">
+    {% if not is_get_msg %}
+    <div class="card-header"><a href="{% url 'form_msg:show_msg' pk=msg.id %}">Message #{{ msg.id }}</a></div>
+    {% endif %}
+    {#                        max-width='400px'#}
+    {#                        <img class="card-img img-fluid mx-auto" width="400px" src="https://cdn-icons-png.flaticon.com/512/342/342647.png">#}
+
+    <div class="card-body">
+        <p class="card-text">
+            <strong class="d-block">{{ msg.author__username }}</strong>
+
+            {{ msg.text|linebreaksbr }}
+        </p>
+
+        <div class="d-flex justify-content-between align-items-center">
+            <p class=="text-muted">{{ msg.created_date|date:"d E Y" }}</p>
+        </div>
+
+        {% if show_buttons %}
+        <div class="row justify-content-center"> {# col-md-6 offset-md-4 #}
+{#            <button type="submit" class="btn btn-primary">Edit</button>#}
+{#            <button type="button" onclick="{% url 'form_msg:edit_msg' msg.id %}" class="btn btn-primary">Edit</button>#}
+            <a href="{% url 'form_msg:edit_msg' msg.id %}" class="btn btn-light">Edit</a>
+            <a href="{% url 'form_msg:delete_msg' msg.id %}" class="btn btn-light ml-1">Delete</a>
+        </div>
+        {% endif %}
+
+    </div> <!-- card body -->
+</div> <!-- card -->
