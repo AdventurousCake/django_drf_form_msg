@@ -3,33 +3,6 @@ from django.db import models
 from core.models import User
 
 
-# from django.utils import timezone
-# class B_User(models.Model):
-#     # author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-#     id = models.IntegerField(unique=True, primary_key=True)
-#     id_user = models.IntegerField()
-#     name = models.CharField(max_length=100)
-#     data = models.TextField()
-#     created_date = models.DateTimeField(null=True)
-#
-#     # def publish(self):
-#     #     self.published_date = timezone.now()
-#     #     self.save()
-#
-#     class Meta:
-#         ordering = ('id',)
-#
-#     def __str__(self):
-#         return 'USER'+self.name
-
-# class MessageBase(models.Model):
-#     class Meta:
-#         abstract = True
-#
-#     created_date = models.DateTimeField(null=False, auto_now_add=True)
-#     updated_date = models.DateTimeField(null=False, auto_now=True)
-
-
 class Message(models.Model):
     # o2m; blank true - не обяз. в форме (пусто)
     author = models.ForeignKey(to=User, related_name='messages', on_delete=models.CASCADE)

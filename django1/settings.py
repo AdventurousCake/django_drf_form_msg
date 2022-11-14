@@ -255,21 +255,17 @@ REST_FRAMEWORK = {
     ],
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',  # get token by POST login,pass; /api-token-auth/ # "6c05a922d4d73462e0b837835cc7d44955fe984b"
+        'rest_framework.authentication.TokenAuthentication',
 
         # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 
-    # THROTTLE
-    #  не будем подключать классы глобально
-    #  подключим их только в тех view-классах, где надо установить лимиты
     'DEFAULT_THROTTLE_CLASSES': [
         'rest_framework.throttling.ScopedRateThrottle',
 
         # 'rest_framework.throttling.UserRateThrottle',
         # 'rest_framework.throttling.AnonRateThrottle',
     ],
-    #  лимиты будут доступны из всего кода проекта
     'DEFAULT_THROTTLE_RATES': {
         'user': '10000/day',  # лимит для UserRateThrottle
         'anon': '1000/day',  # лимит для AnonRateThrottle

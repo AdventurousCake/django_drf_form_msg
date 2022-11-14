@@ -12,40 +12,12 @@
         </div>
             <ul class="list-group list-group-flush">
 
-{#                <li class="list-group-item">#}
-{#                    <div class="h6 text-muted">#}
-{#                    subs: {{followers}}<br />#}
-{#                    follow: {{follows}}#}
-{#                    </div>#}
-{#                </li>#}
-
                 <li class="list-group-item">
                     <div class="h6 text-muted">
                         Count: {{msgs_data_count}}
-{#                        Записей: {{posts_count}}#}
                     </div>
                 </li>
 
-{#                <li class="list-group-item">#}
-{#                    {% if profile.username == user.username %}#}
-{#                    <a class="btn btn-primary" #}
-{#                        href="{% url 'profile_edit' profile.username %}" role="button"> #}
-{#                        Редактировать профиль#}
-{#                    </a> #}
-{#                    {% else %}#}
-{#                        {% if following %}#}
-{#                        <a class="btn btn-primary" #}
-{#                            href="{% url 'profile_unfollow' profile.username %}" role="button"> #}
-{#                            Отписаться #}
-{#                        </a> #}
-{#                        {% else %}#}
-{#                        <a class="btn btn-primary" #}
-{#                            href="{% url 'profile_follow' profile.username %}" role="button">#}
-{#                            Подписаться #}
-{#                        </a>#}
-{#                        {% endif %}#}
-{#                    {% endif %}#}
-{#                </li>#}
             </ul>
     </div>
 </div>

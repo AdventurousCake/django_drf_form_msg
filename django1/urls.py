@@ -25,7 +25,6 @@ from core.views import core_auth
 from django1.settings import ADMIN_PATH
 from home_page.views import admin_old_page
 
-# ORDER IS IMPORTANT
 
 urlpatterns = [
     # path('admin/', admin.site.urls, name='admin_page'),
@@ -37,21 +36,17 @@ urlpatterns = [
     path('simplesite1/', include('simplesite1_bstrap.urls')),
     path('blog/', include('blog.urls')),
     path('people/', include('people.urls')),
-    path('orders/', include('myshop_orders.urls', namespace='orders')),  # namespace?
-    path('cart/', include('myshop_cart.urls', namespace='cart')),  # порядок важен
+    path('orders/', include('myshop_orders.urls', namespace='orders')),
+    path('cart/', include('myshop_cart.urls', namespace='cart')),
     path('shop/', include('myshop.urls', namespace='shop')),
-    # path('accounts/login/', views.LoginView.as_view(), name='login'),
 
     # C WORK
     path('anketa/', include('Anketa.urls'), name='anketa'),
     path('auth_github/', include('social_django.urls', namespace='social')),
     path('page_github/', core_auth),
 
-    # todo!
     path('msg1/', include('FORM_MSG.urls')),
 
-    # api root; BELOW
-    # path('api/v1/', include('api.urls'), name='api'),
 
     # robots
     path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain"), name='robots'),

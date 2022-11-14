@@ -28,7 +28,5 @@ class MsgForm(ModelForm):
 # форма регистрации
 class CreationFormUser(UserCreationForm):
     class Meta(UserCreationForm.Meta):
-        # укажем модель, с которой связана создаваемая форма
         model = User
-        # укажем, какие поля должны быть видны в форме и в каком порядке
         fields = ("first_name", "last_name", "username", "email")

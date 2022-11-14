@@ -3,7 +3,6 @@ from . import views
 
 app_name = 'form_msg'
 
-# NOT DRF API
 urlpatterns = [
     path('send/', views.send_msg, name='send_msg'),
     path('edit/<int:pk>/', views.edit_msg, name='edit_msg'),
