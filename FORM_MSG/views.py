@@ -51,7 +51,7 @@ class UserDetails(DetailView):
 
 class SignUp(CreateView):
     form_class = CreationFormUser
-    success_url = reverse_lazy("form_msg:index")
+    success_url = reverse_lazy("form_msg:msg_list")
     template_name = "form_msg/signup.html"
 
 

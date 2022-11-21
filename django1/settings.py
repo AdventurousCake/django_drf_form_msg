@@ -69,17 +69,15 @@ INSTALLED_APPS = [
     # 'request',  # save all requests; also in middleware
     'rest_framework_simplejwt',
 
-    'polls.apps.PollsConfig',
-    'simplesite1_bstrap.apps.Simplesite1Config',
-    'home_page.apps.MainConfig',
-    'blog.apps.BlogConfig',
-    'people',
-    'myshop.apps.MyshopConfig',
-    'myshop_cart.apps.MyshopCartConfig',
-    'myshop_orders.apps.MyshopOrdersConfig',
+    # 'polls.apps.PollsConfig',
+    # 'simplesite1_bstrap.apps.Simplesite1Config',
+    # 'home_page.apps.MainConfig',
+    # 'blog.apps.BlogConfig',
+    # 'people',
+    # 'myshop.apps.MyshopConfig',
+    # 'myshop_cart.apps.MyshopCartConfig',
+    # 'myshop_orders.apps.MyshopOrdersConfig',
     'core',
-
-    'Anketa.apps.AnketaConfig',
     'api',
     'FORM_MSG'
 
@@ -118,9 +116,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-
-                # custom proc
-                'myshop_cart.context_processors.cart'
             ],
         },
     },
