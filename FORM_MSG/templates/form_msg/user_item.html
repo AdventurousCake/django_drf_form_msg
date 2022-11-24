@@ -1,5 +1,6 @@
  <div class="col-md-3 mb-3 mt-1">
-    <div class="card" style="border: none">
+    <div class="card border-0"
+         style="border: none">
         <div class="card-body">
 {#            <div class="h2 text">#}
 {#                <legend class="h2">{{user.get_full_name}}</legend>#}
@@ -10,9 +11,7 @@
                 {{user.username}}
             </div>
         </div>
-            <ul class="list-group list-group-flush">
-
-                <li class="list-group-item">
+            <li class="list-group-item" style="border: none">
                     <div class="h6 text-muted">
                         Count: {{msgs_data_count}}
                         <br>
@@ -20,8 +19,9 @@
                         <br>
                         Joined: {{user.date_joined|date:"d E Y"}}
                     </div>
+                    <div class="h7 text-muted font-weight-light">
+                        <a href="{% url 'logout' %}" class="href">Logout</a>
+                    </div>
                 </li>
-
-            </ul>
     </div>
 </div>

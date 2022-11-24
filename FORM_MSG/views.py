@@ -80,7 +80,7 @@ def get_msg(request, pk):
                                                                 'created_date'),
                             id=pk)
 
-    show_buttons = True
+    show_buttons = msg['author__username'] == request.user.username
     is_get_msg = True
 
 
@@ -93,7 +93,7 @@ def get_msg(request, pk):
 def edit_msg(request, pk):
     msg = get_object_or_404(klass=Message, id=pk)
     if msg.author != request.user:
-        raise django.http.HttpResponseNotAllowed
+        return django.http.HttpResponseBadRequest()
 
     title = 'Edit msg'
     template = "form_msg/msg_send.html"
