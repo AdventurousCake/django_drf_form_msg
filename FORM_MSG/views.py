@@ -55,7 +55,7 @@ class SignUp(CreateView):
     template_name = "form_msg/signup.html"
 
 
-@login_required()
+# @login_required()
 def msg_list(request):
     title = "Messages"
     btn_caption = ""
@@ -72,7 +72,7 @@ def msg_list(request):
                   context={"title": title, "msgs_data": page, "page": page})
 
 
-@login_required()
+# @login_required()
 def get_msg(request, pk):
     template = 'form_msg/msg_BY_ID.html'
 
