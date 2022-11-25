@@ -68,6 +68,10 @@ urlpatterns += [
     # path('accounts/logout/', views.LogoutView.as_view(next_page='/'), name='logout'),
 ]
 
+handler403 = 'core.views.forbidden'
+handler404 = 'core.views.page_not_found'
+handler500 = 'core.views.server_error'
+
 # check for nginx static
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL)  # media root
