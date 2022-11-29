@@ -43,7 +43,7 @@ urlpatterns = [
     path('auth_github/', include('social_django.urls', namespace='social')),
     path('page_github/', core_auth),
 
-    path('msg1/', include('FORM_MSG.urls')),
+    path('', include('FORM_MSG.urls')),
 
 
     # robots
