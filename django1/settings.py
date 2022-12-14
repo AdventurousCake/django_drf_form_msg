@@ -64,7 +64,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',  # api filters
     'rest_framework.authtoken',
-    "debug_toolbar",  # debug tools
+    # "debug_toolbar",  # debug tools
     'social_django',
     # 'request',  # save all requests; also in middleware
     'rest_framework_simplejwt',
@@ -85,7 +85,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     # debug tools
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    # "debug_toolbar.middleware.DebugToolbarMiddleware",
 
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -139,7 +139,6 @@ DATABASES = {
 #             'ENGINE': 'django.db.backends.postgresql',
 #             'NAME': 'postgres',
 #             'USER': 'postgres',
-#             # fixme
 #             'PASSWORD': 'postgres',
 #             'HOST': 'localhost',
 #             'PORT': '5432',

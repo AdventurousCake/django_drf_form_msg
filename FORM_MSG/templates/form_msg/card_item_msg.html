@@ -2,7 +2,7 @@
 
 <div class="card mb-4 shadow justify-content-center">
     {% if not is_get_msg %}
-    <div class="card-header"><a href="{% url 'form_msg:show_msg' pk=msg.id %}">Message #{{ msg.id }}</a></div>
+        <div class="card-header"><a href="{% url 'form_msg:show_msg' pk=msg.id %}">Message #{{ msg.id }}</a></div>
     {% endif %}
     {#                        max-width='400px'#}
     {#                        <img class="card-img img-fluid mx-auto" width="400px" src="https://cdn-icons-png.flaticon.com/512/342/342647.png">#}

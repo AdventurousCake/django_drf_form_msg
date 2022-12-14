@@ -74,7 +74,7 @@
     </div> <!-- card -->
 
     {#    list of msgs#}
-    {% if data %}
+    {% if table_data %}
         <div class="table-responsive mt-4">
             <table class="table table-striped">
                 <thead>
@@ -89,7 +89,7 @@
                 </thead>
 
                 <tbody>
-                {% for item in data %}
+                {% for item in table_data %}
                     <tr>
                         <th scope="row">{{ forloop.counter }}</th>
                         <td>{{ item.author }}</td>

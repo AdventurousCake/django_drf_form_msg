@@ -1,15 +1,17 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
+from django.db.models import Count, F
 from django.shortcuts import render, get_object_or_404, redirect
 import django.http
 # from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 
 # from django.template import loader
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
+from django.views.generic.edit import BaseDeleteView
 
 import logging
 
@@ -135,7 +137,7 @@ def send_msg(request):
     form = None
 
     # FOR TABLE
-    msgs_data = Message.objects.select_related().order_by('-created_date')[:5]  # INNER JOIN сразу
+    table_data = Message.objects.select_related().order_by('-created_date')[:5]  # INNER JOIN сразу
 
     form = MsgForm(request.POST or None, request.FILES or None,
                    initial={'text': 'example'})  # and FILES
@@ -152,4 +154,4 @@ def send_msg(request):
         # return render(request, "form_msg/msg_send.html", {"form": form, "title": title, "btn_caption": btn_caption, "error": error})
 
     return render(request, template_name=template, context=
-    {"form": form, "title": title, "btn_caption": btn_caption, "error": error, "data": msgs_data})
+    {"form": form, "title": title, "btn_caption": btn_caption, "error": error, "table_data": table_data})
