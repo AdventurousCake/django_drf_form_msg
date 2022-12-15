@@ -27,19 +27,6 @@ from django1.settings import ADMIN_PATH
 
 urlpatterns = [
     path('admin/', admin.site.urls, name='admin_page'),
-    # path(ADMIN_PATH+'/', admin.site.urls, name='admin_page'),
-
-    # path('polls/', include('polls.urls'), name='polls'),
-    # path('', include('home_page.urls'), name='home'),
-    # path('simplesite1/', include('simplesite1_bstrap.urls')),
-    # path('blog/', include('blog.urls')),
-    # path('people/', include('people.urls')),
-    # path('orders/', include('myshop_orders.urls', namespace='orders')),
-    # path('cart/', include('myshop_cart.urls', namespace='cart')),
-    # path('shop/', include('myshop.urls', namespace='shop')),
-    #
-    # # C WORK
-    # path('anketa/', include('Anketa.urls'), name='anketa'),
     path('auth_github/', include('social_django.urls', namespace='social')),
     path('page_github/', core_auth),
 
