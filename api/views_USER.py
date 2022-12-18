@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
-from api.serializers import UserSerializer, UserSerializerSIMPLE
+from api.serializers import UserSerializer
 from core.models import User
 
 
@@ -26,10 +26,6 @@ class UserList(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def get(self, request, username):
-        # ПОЛЯ В СЕРИАЛИЗАТОРЕ!
-        # users = User.objects.values('id', 'username', 'messages').select_related('messages').filter(username=username)
-        # users = User.objects.select_related('messages').filter(username=username) # select_related: 'messages'. Choices are: auth_token
-
         users = User.objects.select_related().prefetch_related('messages').filter(username=username)
 
         serializer = UserSerializer(users, many=True)

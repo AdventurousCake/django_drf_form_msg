@@ -1,23 +1,19 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
+import logging
+
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
-from django.db.models import Count, F
 from django.shortcuts import render, get_object_or_404, redirect
-import django.http
-# from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-
 # from django.template import loader
-from django.http import Http404, HttpResponse, HttpResponseRedirect
-from django.urls import reverse, reverse_lazy
-from django.contrib.auth.decorators import login_required
-from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
-from django.views.generic.edit import BaseDeleteView
-
-import logging
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DetailView
 
 from core.models import User
 from .forms import MsgForm, CreationFormUser
 from .models import Message
+
+# from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 
 log = logging.getLogger(__name__)
 log.setLevel(logging.INFO)
@@ -43,7 +39,6 @@ class UserDetails(DetailView):
         context['msgs_data'] = query
         context['msgs_data_count'] = query.count()
         return context
-
 
 
 # alternative for send_msg
@@ -80,12 +75,11 @@ def get_msg(request, pk):
     template = 'form_msg/msg_BY_ID.html'
 
     msg = get_object_or_404(klass=Message.objects.select_related("author").values('id', 'author__username', 'text',
-                                                                'created_date'),
+                                                                                  'created_date'),
                             id=pk)
 
     show_buttons = msg['author__username'] == request.user.username
     is_get_msg = True
-
 
     title = f"Message"
     return render(request, template_name=template,
