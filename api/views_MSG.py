@@ -5,11 +5,12 @@ from rest_framework.throttling import UserRateThrottle
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
+from FORM_MSG.models import Message
 from api.permissions import IsOwnerOrReadOnly
 from api.serializers import MsgSerializer
-# from rest_framework.decorators import action
 
-from FORM_MSG.models import Message
+
+# from rest_framework.decorators import action
 
 
 # msg_load/ # for js
@@ -42,6 +43,7 @@ class MsgSearchViewSet(ModelViewSet):
     search_fields = ['text', ]  # 'name'
     permission_classes = (permissions.AllowAny,)
     ordering_fields = ['-created_date']
+
 
 class MessagesViewSet(ModelViewSet):
     http_method_names = ('get', 'post', 'put', 'patch', 'head', 'delete')  # option
