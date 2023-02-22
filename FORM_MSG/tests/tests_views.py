@@ -1,14 +1,11 @@
-import datetime
-
-from django import forms
-from django.test import TestCase, Client, override_settings
 from django.core.cache import cache
+from django.forms.models import model_to_dict
+from django.test import TestCase, Client
 from django.urls import reverse
 
 from FORM_MSG.forms import MsgForm
+from FORM_MSG.models import Message, Like
 from core.models import User
-
-from FORM_MSG.models import Message
 
 
 # BASE CLASS
@@ -62,6 +59,32 @@ class MessageViewTest(MessageTestBase):
                 self.assertEqual(response.status_code, 200)
                 self.assertTemplateUsed(response, template)
 
+    # форма в forms
+    # def test_home_page_show_correct_context(self):
+    #     """Шаблон home сформирован с правильным контекстом."""
+    #     response = self.guest_client.get(reverse('form_msg:send_msg'))
+    #     self.assertEqual(response.status_code, 200)
+    #
+    #     # Словарь ожидаемых типов полей формы:
+    #     # указываем, объектами какого класса должны быть поля формы
+    #     form_fields = {
+    #         'title': forms.fields.CharField,
+    #         # При создании формы поля модели типа TextField
+    #         # преобразуются в CharField с виджетом forms.Textarea
+    #         'text': forms.fields.CharField,
+    #         'slug': forms.fields.SlugField,
+    #         'image': forms.fields.ImageField,
+    #     }
+    #
+    #     # Проверяем, что типы полей формы в словаре context
+    #     # соответствуют ожиданиям
+    #     for value, expected in form_fields.items():
+    #         with self.subTest(value=value):
+    #             form_field = response.context['form'].fields[value]
+    #             # Проверяет, что поле формы является экземпляром
+    #             # указанного класса
+    #             self.assertIsInstance(form_field, expected)
+
     # БЕЗ PAGINATOR
     def test_msg_list_is_1(self):
         """тест контекста"""
@@ -80,11 +103,13 @@ class MessageViewTest(MessageTestBase):
         response = self.authorized_client.get(reverse('form_msg:msg_list'))
         self.assertEqual(response.status_code, 200)
 
-
         # взяли превый элемент из списка и проверили, что его содержание совпадает с ожидаемым
-        first_object = response.context['object_list'][0]
+        first_object = model_to_dict(response.context['object_list'][0])
+        print(first_object)
+
         message_id_0 = first_object.get('id')
-        message_author_0 = first_object.get('author__username')
+        # message_author_0 = first_object.get('author__username')
+        message_author_id_0 = first_object.get('author')
         message_text_0 = first_object.get('text')
         message_date_0 = first_object.get('date')
 
@@ -93,7 +118,8 @@ class MessageViewTest(MessageTestBase):
         # message_text_0 = first_object.get('text')
 
         self.assertEqual(message_id_0, 1)
-        self.assertEqual(message_author_0, self.user.username)
+        # self.assertEqual(message_author_0, self.user.username)
+        self.assertEqual(message_author_id_0, 1)
         self.assertEqual(message_text_0, '123')
         # self.assertIsInstance(message_date_0, datetime.datetime)
 
@@ -102,11 +128,13 @@ class MessageViewTest(MessageTestBase):
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response.context['form'], MsgForm)
 
-
     def test_initial_value(self):
         """Предустановленнное значение формы."""
         response = self.authorized_client.get(reverse('form_msg:send_msg'))
         self.assertEqual(response.status_code, 200)
+
+        # print(response.context['form'])
+        # print(response.context['form'].fields['text'])
 
         title_inital = response.context['form'].initial['text']
         self.assertEqual(title_inital, 'example')
@@ -119,3 +147,28 @@ class MessageViewTest(MessageTestBase):
         self.assertRedirects(response, reverse('form_msg:send_msg'))
 
         self.assertFalse(Message.objects.filter(id=1).exists())
+
+
+class LikeMessageViewTest(MessageTestBase):
+    def test_like_initial(self):
+        response = self.authorized_client.get(reverse('form_msg:msg_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNotNone(response.context['user_likes'])
+        # print(response.context['object_list'])
+        self.assertEqual(response.context['object_list'][0].likes_count(), 0)
+
+    def test_like(self):
+        response = self.authorized_client.get(reverse('form_msg:msg_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['object_list'][0].likes_count(), 0)
+
+        response2 = self.authorized_client.post(reverse('form_msg:like', kwargs={'pk': 1}), {})
+        response = self.authorized_client.get(reverse('form_msg:msg_list'))
+        self.assertEqual(response.context['object_list'][0].likes_count(), 1)
+
+        self.assertTrue(Like.objects.filter(id=1).exists())
+
+    # def test_like_unique(self):
+    #     with self.assertRaises(IntegrityError):
+    #         Like.objects.create(user=self.user, message=self.message)
+    #         Like.objects.create(user=self.user, message=self.message)

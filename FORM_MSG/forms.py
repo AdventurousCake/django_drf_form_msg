@@ -1,14 +1,15 @@
+from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelForm, ValidationError
+
 from core.models import User
-from .models import Message
+from .models import Message, Comment
 
 
 class MsgForm(ModelForm):
     class Meta:
         model = Message
-        fields = '__all__'  # fix ('text',), ('__all__',)
-        exclude = ('id', 'author')
+        fields = ('name', 'text', 'accept_terms', 'file', 'image')
         help_texts = {'text': "Validator check this", 'name': 'Your name'}
 
     # clean_FIELD validation
@@ -23,6 +24,15 @@ class MsgForm(ModelForm):
         if not data:
             raise ValidationError('You should accept terms')
         return data
+
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('text',)
+        widgets = {
+            'text': forms.Textarea(attrs={'rows': 2}),
+        }
 
 
 # форма регистрации

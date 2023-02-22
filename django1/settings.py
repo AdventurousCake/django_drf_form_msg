@@ -11,8 +11,9 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-from environs import Env
 from sys import platform
+
+from environs import Env
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -69,14 +70,6 @@ INSTALLED_APPS = [
     # 'request',  # save all requests; also in middleware
     'rest_framework_simplejwt',
 
-    # 'polls.apps.PollsConfig',
-    # 'simplesite1_bstrap.apps.Simplesite1Config',
-    # 'home_page.apps.MainConfig',
-    # 'blog.apps.BlogConfig',
-    # 'people',
-    # 'myshop.apps.MyshopConfig',
-    # 'myshop_cart.apps.MyshopCartConfig',
-    # 'myshop_orders.apps.MyshopOrdersConfig',
     'core',
     'api',
     'FORM_MSG'

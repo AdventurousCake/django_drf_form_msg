@@ -1,17 +1,14 @@
-from django.core.exceptions import PermissionDenied
 import logging
 
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.core.paginator import Paginator
-from django.shortcuts import render, get_object_or_404, redirect
-# from django.template import loader
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
 
 from core.models import User
-from .forms import MsgForm, CreationFormUser
-from .models import Message
+from .forms import MsgForm, CreationFormUser, CommentForm
+from .models import Message, Comment
 
 # from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 
@@ -20,17 +17,11 @@ log.setLevel(logging.INFO)
 
 
 class UserDetails(DetailView):
-    # model = User
     template_name = 'form_msg/USERPAGE.html'
-    # context_object_name = ''
-    # extra_context = 'доп данные'
-
-    # change to context
     queryset = User.objects.all().select_related()
 
     def get_context_data(self, **kwargs):
         pk = self.kwargs.get('pk', '')
-
         context = super().get_context_data(**kwargs)
         query = Message.objects.select_related('author').values('id', 'author__username', 'text', 'created_date') \
             .order_by('-created_date') \
@@ -41,111 +32,143 @@ class UserDetails(DetailView):
         return context
 
 
-# alternative for send_msg
-# class MsgFormView(LoginRequiredMixin, CreateView):
-#     form_class = MsgForm
-#     success_url = reverse_lazy('form_msg:index')
-#     template_name = "form_msg/msg_send.html"
-
 class SignUp(CreateView):
     form_class = CreationFormUser
-    success_url = reverse_lazy("login")
+    success_url = reverse_lazy("login")  # reverse_lazy("form_msg:msg_list")
     template_name = "form_msg/signup.html"
 
 
-# @login_required()
-def msg_list(request):
-    title = "Messages"
-    btn_caption = ""
-    template = "form_msg/msg_list.html"
+class MsgList(ListView):
+    """List of messages with user likes"""
+    template_name = "form_msg/msg_list.html"
+    paginate_by = 2
+    queryset = Message.objects.select_related('author').prefetch_related('likes')
 
-    msgs_data = Message.objects.select_related('author').values('id', 'author__username', 'text',
-                                                                'created_date').order_by('-created_date')
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(MsgList, self).get_context_data(**kwargs)
 
-    paginator = Paginator(msgs_data, 2)
-    page_number = request.GET.get("page")
-    page = paginator.get_page(page_number)
-    # "msgs_data": page
-    return render(request, template_name=template,
-                  context={"title": title, "msgs_data": page, "page": page})
+        if self.request.user.is_authenticated:
+            msgs = self.queryset
+            context['show_buttons'] = True
+            # likes_count in template
 
+            # user likes msg ids
+            context['user_likes'] = msgs.filter(likes__user=self.request.user.id).values_list('id', flat=True)
+            print(context['user_likes'])
+        return context
 
-# @login_required()
-def get_msg(request, pk):
-    template = 'form_msg/msg_BY_ID.html'
+class DetailMsgView(DetailView):
+    model = Message
+    template_name = 'form_msg/msg_BY_ID.html'
+    context_object_name = 'msg'
 
-    msg = get_object_or_404(klass=Message.objects.select_related("author").values('id', 'author__username', 'text',
-                                                                                  'created_date'),
-                            id=pk)
+    def get_queryset(self):
+        return get_object_or_404(klass=Message.objects.select_related("author", "comments")
+                                 .values('id', 'author__username', 'text', 'created_date'),
+                                 id=self.kwargs.get('pk'))
 
-    show_buttons = msg['author__username'] == request.user.username
-    is_get_msg = True
-
-    title = f"Message"
-    return render(request, template_name=template,
-                  context={"title": title, "msgs_data": msg, "show_buttons": show_buttons, 'is_get_msg': is_get_msg})
-
-
-@login_required()
-def edit_msg(request, pk):
-    msg = get_object_or_404(klass=Message, id=pk)
-    if msg.author != request.user:
-        raise PermissionDenied()
-
-    title = 'Edit msg'
-    template = "form_msg/msg_send.html"
-    btn_caption = "Save"
-    error = ''
-
-    form = MsgForm(request.POST or None, files=request.FILES or None,
-                   instance=msg)
-    if request.method == "POST" and form.is_valid():
-        form.save()
-        return redirect("form_msg:send_msg")
-    else:
-        error = f'Incorrect form\n' \
-                f'{form.errors}'
-
-    return render(request, template_name=template, context=
-    {"form": form, "title": title, "btn_caption": btn_caption, "error": error, "data": ""})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Message'
+        context['is_detail_msg'] = True
+        context['show_edit_buttons'] = self.object.get('author__username') == self.request.user.username
+        return context
 
 
-@login_required()
-def delete_msg(request, pk):
-    msg = get_object_or_404(klass=Message, id=pk)
-    if msg.author != request.user:
-        raise PermissionDenied()
+class DetailMsgANDCommentView(CreateView):
+    model = Message
+    template_name = 'form_msg/msg_BY_ID.html'
+    context_object_name = 'msg'
+    form_class = CommentForm
 
-    msg.delete()
+    queryset = Message.objects.select_related("author", "comments").values('id', 'author__username', 'text',
+                                                                           'created_date')
 
-    return redirect('form_msg:send_msg')
+    def get_success_url(self):
+        return reverse_lazy('form_msg:show_msg', kwargs={'pk': self.kwargs['pk']})
+
+    def get_context_data(self, **kwargs):
+        msg = self.get_object()
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Message'
+        context['is_detail_msg'] = True
+        context['show_edit_buttons'] = msg.get('author__username') == self.request.user.username
+        context['comments'] = Comment.objects.select_related('user').filter(message__id=msg.get('id')).values(
+            'user__username', 'text')
+        context['show_comments'] = True
+        context['msg'] = msg
+        return context
+
+    def form_valid(self, form):
+        if self.request.user.is_anonymous:
+            raise PermissionDenied()
+
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        obj.message = Message.objects.get(pk=self.kwargs['pk'])
+
+        return super(DetailMsgANDCommentView, self).form_valid(form)
 
 
-@login_required()
-def send_msg(request):
-    title = "📨 Send message form"
-    btn_caption = "Send"
-    template = "form_msg/msg_send.html"
+class UpdateMsgView(LoginRequiredMixin, UpdateView):
+    model = Message
+    form_class = MsgForm
 
-    error = ''
-    form = None
+    template_name = "form_msg/msg_send.html"
+    success_url = reverse_lazy('form_msg:send_msg')
 
-    # FOR TABLE
-    table_data = Message.objects.select_related().order_by('-created_date')[:5]  # INNER JOIN сразу
+    def get_object(self, *args, **kwargs):
+        obj = super(UpdateMsgView, self).get_object(*args, **kwargs)
+        if obj.author != self.request.user:
+            raise PermissionDenied()  # or Http404
+        return obj
 
-    form = MsgForm(request.POST or None, request.FILES or None,
-                   initial={'text': 'example'})  # and FILES
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "📨 Send message form"
+        context['btn_caption'] = "Send"
+        context['table_data'] = Message.objects.select_related().order_by('-created_date')[:5]
 
-    if form.is_valid() and request.method == "POST":
-        msg = form.save(commit=False)
-        msg.author = request.user
-        msg.save()
-        return redirect('form_msg:send_msg')
-    else:
+        return context
 
-        error = f'Incorrect form\n' \
-                f'{form.errors}'
-        # return render(request, "form_msg/msg_send.html", {"form": form, "title": title, "btn_caption": btn_caption, "error": error})
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.author = self.request.user
+        return super(UpdateMsgView, self).form_valid(form)
 
-    return render(request, template_name=template, context=
-    {"form": form, "title": title, "btn_caption": btn_caption, "error": error, "table_data": table_data})
+
+class DeleteMsgView(LoginRequiredMixin, DeleteView):
+    model = Message
+    success_url = reverse_lazy('form_msg:send_msg')
+
+    # ignore confirm template
+    def get(self, request, *args, **kwargs):
+        # return self.post(request, *args, **kwargs)
+        return self.delete(request, *args, **kwargs)
+
+    def get_object(self, *args, **kwargs):
+        obj = super(DeleteMsgView, self).get_object(*args, **kwargs)
+        if obj.author != self.request.user:
+            raise PermissionDenied()  # or Http404
+        return obj
+
+
+class MsgFormCreateView(LoginRequiredMixin, CreateView):
+    form_class = MsgForm
+    template_name = "form_msg/msg_send.html"
+    initial = {'text': 'example'}
+    success_url = reverse_lazy('form_msg:send_msg')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "📨 Send message form"
+        context['btn_caption'] = "Send"
+        context['table_data'] = Message.objects.select_related().order_by('-created_date')[:5]
+
+        return context
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.author = self.request.user
+
+        return super(MsgFormCreateView, self).form_valid(form)

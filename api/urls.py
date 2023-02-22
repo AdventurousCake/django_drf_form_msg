@@ -2,16 +2,16 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from rest_framework import permissions
 from rest_framework.authtoken import views
-from .views_MSG import MessagesViewSet, MsgSearchViewSet, MsgLoadView
-from .views_USER import UserViewSet, UserList
-from .views_func_and_APIView_test import hello
 from rest_framework.routers import DefaultRouter
 from rest_framework.schemas import get_schema_view
-
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+
+from .views_LIKES_AND_COMMENTS import LikeListView, CommentList
+from .views_MSG import MessagesViewSet, MsgSearchViewSet, MsgLoadView
+from .views_USER import UserViewSet, UserList
 
 app_name = 'api'
 
@@ -31,6 +31,8 @@ urlpatterns = [
 
     path('msg_load/', MsgLoadView.as_view(), name='msg_load'),
     path('users_view/<str:username>/', UserList.as_view(), name='msg_user'),
+    path('likes_list', LikeListView.as_view(), name='likes_list'),
+    path('comments_list', CommentList.as_view(), name='comments_list'),
 
     path('api-token-auth/', views.obtain_auth_token),
 

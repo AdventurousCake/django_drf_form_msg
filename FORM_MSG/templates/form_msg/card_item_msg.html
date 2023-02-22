@@ -18,14 +18,39 @@
             <p class=="text-muted">{{ msg.created_date|date:"d E Y" }}</p>
         </div>
 
-        {% if show_buttons %}
         <div class="row justify-content-center"> {# col-md-6 offset-md-4 #}
-{#            <button type="submit" class="btn btn-primary">Edit</button>#}
-{#            <button type="button" onclick="{% url 'form_msg:edit_msg' msg.id %}" class="btn btn-primary">Edit</button>#}
-            <a href="{% url 'form_msg:edit_msg' msg.id %}" class="btn btn-light">Edit</a>
-            <a href="{% url 'form_msg:delete_msg' msg.id %}" class="btn btn-light ml-1">Delete</a>
-        </div>
-        {% endif %}
+            {% if show_edit_buttons %}
 
+                {#                <button type="submit" class="btn btn-primary">Edit</button>#}
+                {#                <button type="button" onclick="{% url 'form_msg:edit_msg' msg.id %}" class="btn btn-primary">Edit</button>#}
+                <a href="{% url 'form_msg:edit_msg' msg.id %}" class="btn btn-light">Edit</a>
+                <a href="{% url 'form_msg:delete_msg' msg.id %}" class="btn btn-light ml-1">Delete</a>
+
+            {% endif %}
+
+            <form action="{% url 'form_msg:like' msg.id %}" method="POST">
+                {% csrf_token %}
+
+                {% if not is_detail_msg %}
+                    {% if user_likes and msg.id in user_likes %}
+                        <button type="submit" name="msg_id" value="{{ msg.id }}" class="btn btn-danger">Unlike
+                            ({{ msg.likes_count }})
+                        </button>
+                    {% else %}
+                        <button type="submit" name="msg_id" value="{{ msg.id }}" class="btn btn-primary">
+                            {% if msg.likes_count != 0 %}
+                                👍 Like ({{ msg.likes_count }})
+                            {% else %}
+                                👍 Like
+                            {% endif %}
+                        </button>
+                    {% endif %}
+
+                {% else %}
+                    {#                    pass#}
+                {% endif %}
+            </form>
+            {#            {% endif %}#}
+        </div> <!-- card btns -->
     </div> <!-- card body -->
 </div> <!-- card -->

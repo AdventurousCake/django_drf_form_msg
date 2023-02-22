@@ -12,20 +12,17 @@
         <div class="col-md-7 p-5">
             <h1 class="p-1">Messages</h1>
 
-            {% if msgs_data %}
-                {% for msg in msgs_data %}
+            {% if object_list %}
+                {% for msg in object_list %}
                     {% include 'form_msg/card_item_msg.html' %}
                 {% endfor %}
             {% else %}
                 Empty
             {% endif %}
 
-            {% if page.has_other_pages %}
-
-            {% with page as page_obj %}
+            {# paginator #}
+            {% if page_obj.has_other_pages %}
             {% include 'form_msg/includes/paginator.html' %}
-            {% endwith %}
-
             {% endif %}
 
         </div>
