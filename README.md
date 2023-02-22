@@ -27,13 +27,13 @@
 
 ## Страница входа
 ## http://127.0.0.1:8000/signup/
-![img](FORM_MSG/IMAGES_FOR_README/Снимок%20экрана%202022-11-21%20140935.png)
+![img](FORM_MSG/IMAGES_FOR_README/signup.png)
 
 ## Страница пользователя
-![img](FORM_MSG/IMAGES_FOR_README/Снимок%20экрана%202022-11-14%20010653.png)
+![img](FORM_MSG/IMAGES_FOR_README/user_page.png)
 
 ## Форма редактирования
-![img](FORM_MSG/IMAGES_FOR_README/Снимок%20экрана%202022-11-14%20010721.png)
+![img](FORM_MSG/IMAGES_FOR_README/edit_page.png)
 
 ## DRF endpoints
 ### http://127.0.0.1:8000/api/v1/msg/
@@ -42,4 +42,4 @@
 
 ## Swagger 
 ### http://127.0.0.1:8000/api/v1/swagger
-![img](FORM_MSG/IMAGES_FOR_README/Снимок%20экрана%202022-11-14%20005110.png)
+![img](FORM_MSG/IMAGES_FOR_README/swagger.png)
