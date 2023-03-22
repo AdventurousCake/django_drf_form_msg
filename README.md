@@ -14,13 +14,14 @@
 * Github Auth
 * Unit тесты
 * Swagger
+* Docker
 
 ## Как запустить
 - Создать .env файл
 - chmod +x ./entrypoint.sh 
-- docker-compose -f up -d --build
-- docker-compose -f exec web python manage.py migrate --noinput
-- docker-compose -f exec web python manage.py collectstatic --no-input --clear 
+- docker-compose up -d --build
+- docker-compose exec web python manage.py migrate --noinput
+- docker-compose exec web python manage.py collectstatic --no-input --clear 
 
 
 ## Главная
