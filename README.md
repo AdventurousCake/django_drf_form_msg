@@ -16,8 +16,12 @@
 * Swagger
 
 ## Как запустить
-1. python3 manage.py collectstatic
-2. python3 manage.py runserver
+- Создать .env файл
+- chmod +x ./entrypoint.sh 
+- docker-compose -f up -d --build
+- docker-compose -f exec web python manage.py migrate --noinput
+- docker-compose -f exec web python manage.py collectstatic --no-input --clear 
+
 
 ## Главная
 ![img](FORM_MSG/IMAGES_FOR_README/index.png)

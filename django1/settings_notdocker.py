@@ -31,19 +31,15 @@ if platform == 'linux':
 else:
     IS_SERVER = False
 
-# also for drf; UPD DB AFTER KEY
+# also for drf
+# UPD DB AFTER KEY
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-# ALLOWED_HOSTS = ['127.0.0.1']
-# ALLOWED_HOSTS.extend(env.list("ALLOWED_HOSTS"))
-
-ENV_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS")
-ALLOWED_HOSTS = []
-if ENV_HOSTS:
-    ALLOWED_HOSTS.extend(ENV_HOSTS.split(" "))
+ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS.extend(env.list("ALLOWED_HOSTS"))
 
 CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS")  # in dj 3.x without https
 
@@ -124,16 +120,23 @@ WSGI_APPLICATION = 'django1.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'default':
-        {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'postgres_1',
-            'USER': 'postgres',
-            'PASSWORD': 'postgres',
-            'HOST': 'db',
-            'PORT': '5432',
-        }
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
 }
+
+# DATABASES = {
+#     'default':
+#         {
+#             'ENGINE': 'django.db.backends.postgresql',
+#             'NAME': 'postgres',
+#             'USER': 'postgres',
+#             'PASSWORD': 'postgres',
+#             'HOST': 'localhost',
+#             'PORT': '5432',
+#         }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
