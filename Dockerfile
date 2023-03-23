@@ -8,8 +8,8 @@ RUN addgroup -S app_user && adduser -S app_user -G app_user
 # set work directory
 ENV APP_HOME=/usr/src/app
 RUN mkdir $APP_HOME
-RUN mkdir $APP_HOME/staticfiles
-RUN mkdir $APP_HOME/mediafiles
+RUN mkdir $APP_HOME/static
+RUN mkdir $APP_HOME/media
 
 WORKDIR $APP_HOME
 

@@ -5,7 +5,7 @@ services:
     build: .
     command: gunicorn django1.wsgi:application --bind 0.0.0.0:8000
     volumes:
-      - ./:/usr/src/app/
+      - static_volume:/usr/src/app/static
     ports:
       - 8081:8000
     env_file:
@@ -25,8 +25,8 @@ services:
   nginx:
     build: infra/nginx
     volumes:
-      - static_volume:/usr/src/app/staticfiles
-      - media_volume:/usr/src/app/mediafiles
+      - static_volume:/usr/src/app/static
+      - media_volume:/usr/src/app/media
     ports:
       - 9001:80
     depends_on:
