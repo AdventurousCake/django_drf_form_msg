@@ -10,8 +10,8 @@
         <div class="collapse navbar-collapse" id="nav">
             {#bs4: ml-auto, bs5: me-auto#}
             <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="{% url 'form_msg:send_msg' %}"><b>✏ CREATE NEW</b></a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'form_msg:msg_list' %}">All</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'form_msg:send_msg' %}">SEND</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url "api:msg_load" %}">API msg</a></li>
                 {% if user.is_authenticated %}
                     <li class="nav-item"><a class="nav-link" href="{% url "api:msg_user" request.user.username %}">API
