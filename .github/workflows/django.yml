@@ -29,5 +29,7 @@ jobs:
         ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
         CSRF_TRUSTED_ORIGINS: ${{ secrets.CSRF_TRUSTED_ORIGINS }}
         SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+        SOCIAL_AUTH_GITHUB_KEY: ${{ secrets.SOCIAL_AUTH_GITHUB_KEY }}
+        SOCIAL_AUTH_GITHUB_SECRET: ${{ secrets.SOCIAL_AUTH_GITHUB_SECRET }}
       run: |
         python manage.py test
