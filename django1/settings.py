@@ -41,14 +41,14 @@ DEBUG = False
 # ALLOWED_HOSTS.extend(env.list("ALLOWED_HOSTS"))
 
 ENV_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS")
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0']
 if ENV_HOSTS:
     ALLOWED_HOSTS.extend(ENV_HOSTS.split(" "))
 
 CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS")  # in dj 3.x without https
 
-ADMIN_PATH = env.str('ADMIN_PATH') or 'admin'
-API_PATH = env.str('API_PATH') or 'api/v1/'
+ADMIN_PATH = env.str('ADMIN_PATH', 'admin')
+API_PATH = env.str('API_PATH', 'api/v1/')
 
 # debug tools ip
 INTERNAL_IPS = [
